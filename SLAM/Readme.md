@@ -141,6 +141,3 @@ roslaunch scout_bringup navigation_4wd.launch
 ```
 ### 在地图上指定2d nav goal
 
-
-我的修改改
-
