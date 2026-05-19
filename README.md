@@ -67,7 +67,7 @@ roslaunch ranger_bringup navigation_4wd.launch
 
 ### 包含的 ROS 包
 
-| 包名 | 说明 |
+| 包名 | 说明1 |
 |------|------|
 | `ranger_base` | 核心驱动节点（C++），发布里程计、系统状态、执行器状态、电池状态 |
 | `ranger_msgs` | 自定义消息定义（SystemState、MotionState、ActuatorState 等） |
