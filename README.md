@@ -198,6 +198,12 @@ Dobot 控制器 (192.168.5.1)
 ### 使用方法
 
 ```bash
+# 仿真测试（无需实物）【可行】
+export DOBOT_TYPE=cr10
+roslaunch dobot_description display.launch        # RViz 关节滑块
+roslaunch dobot_moveit demo.launch                # MoveIt 仿真
+roslaunch dobot_gazebo gazebo.launch              # Gazebo 仿真
+
 # 真实 CR10 控制
 export DOBOT_TYPE=cr10
 roslaunch dobot_v4_bringup bringup_v4.launch robotIp:=192.168.5.1
@@ -246,7 +252,7 @@ DH-Robotics 系列电动夹爪的 ROS 驱动。**当前项目使用的夹爪为 
 | `/gripper/states` | `GripperState` | 50Hz | 夹爪状态 |
 | `/gripper/joint_states` | `sensor_msgs/JointState` | 50Hz | 关节状态（`gripper_finger1_joint`，0~0.637 rad） |
 
-### 使用方法
+### 使用方法 [可行]
 
 ```bash
 # 默认 AG95 Modbus 夹爪
