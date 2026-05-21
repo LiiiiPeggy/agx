@@ -6,7 +6,7 @@
     name="model" />
   <param
     name="robot_description"
-    textfile="$(find RangerCR10LiDAR_description)/urdf/RangerCR10LiDAR.urdf" />
+    textfile="$(find rangerboxcr10lidar_description)/urdf/rangercr10lidar.urdf" />
   <node
     name="joint_state_publisher_gui"
     pkg="joint_state_publisher_gui"
@@ -19,7 +19,7 @@
     name="rviz"
     pkg="rviz"
     type="rviz"
-    args="-d $(find RangerCR10LiDAR_description)/urdf.rviz" />
+    args="-d $(find rangerboxcr10lidar_description)/urdf.rviz" />
   <!-- ################################ -->
   <!-- XML: use new combined URDF end -->
   <!-- ################################ -->

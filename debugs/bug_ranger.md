@@ -1,3 +1,5 @@
+> **注（命名已统一）：** 整机描述包现为 `rangerboxcr10lidar_description`，URDF 机器人名为 `rangercr10lidar`。下文终端输出为历史记录，其中的 `RangerCR10LiDAR_description` 为旧包名，重编译后该 WARNING 应消失。
+
 ### 问题1：启动底盘驱动之后，如何进行移动操作？
 
 ```bash

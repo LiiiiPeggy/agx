@@ -1,3 +1,5 @@
+> **注（命名已统一）：** 整机描述包现为 `rangerboxcr10lidar_description`，URDF 机器人名为 `rangercr10lidar`。下文终端输出为历史记录，其中的 `RangerCR10LiDAR_description` 为旧包名。
+
 ### 问题1：运行如下命令之后的作用是什么，同时运行真实CR10控制出现了如下报错
 
 ```bash

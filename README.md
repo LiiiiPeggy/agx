@@ -53,7 +53,7 @@ roslaunch ranger_bringup navigation_4wd.launch
 8. [realsense-ros -- Intel RealSense 深度相机驱动](#8-realsense-ros----intel-realsense-深度相机驱动)
 9. [SLAM -- 建图与激光里程计](#9-slam----建图与激光里程计)
 10. [plugin -- RViz 多目标导航插件](#10-plugin----rviz-多目标导航插件)
-11. [RangerBoxCR10LiDAR_description -- 整机描述包](#11-rangerboxcr10lidar_description----整机描述包)
+11. [rangerboxcr10lidar_description -- 整机描述包](#11-rangerboxcr10lidar_description----整机描述包)
 
 ---
 
@@ -534,20 +534,26 @@ RViz 面板插件，在原始多目标导航功能基础上扩展了建图、地
 
 ---
 
-## 11. RangerBoxCR10LiDAR_description -- 整机描述包
+## 11. rangerboxcr10lidar_description -- 整机描述包
 
-**路径:** `RangerBoxCR10LiDAR_description/`
+**路径:** `rangerboxcr10lidar_description/`
 
 不在原始 OriGIT 项目中，为本工作空间新增的整机 URDF/mesh 集成包，将所有设备合并到统一的 TF 树中。
 
 ### 主要内容
 
-- `RangerCR10LiDAR.urdf`：整合 Ranger 底盘、CR10 机械臂、AG95 夹爪、RoboSense 雷达、RealSense D435 和上装箱体。
+- `urdf/rangercr10lidar.urdf`（`<robot name="rangercr10lidar">`）：整合 Ranger 底盘、CR10 机械臂、AG95 夹爪、RoboSense 雷达、RealSense D435 和上装箱体。
 - `cr10_mount_joint`：将 `cr10_base_link` 固定到底盘 `base_link`。
 - AG95 固定到 `cr10_Link6`，单个 `gripper_finger1_joint` 通过 mimic joint 驱动夹爪连杆联动。
 - 雷达通过 `lidar_joint0` 固定在 `base_link` 上。
 - RealSense D435 通过 `d435_joint` 固定到 `lidar_link0` 上方。
-- `joint_names_RangerCR10LiDAR_description.yaml`：整合底盘转向/轮子关节和 CR10 六轴关节。
+- `config/joint_names_rangerboxcr10lidar_description.yaml`：整合底盘转向/轮子关节和 CR10 六轴关节。
+
+### 启动
+
+```bash
+roslaunch rangerboxcr10lidar_description display.launch
+```
 
 ---
 
