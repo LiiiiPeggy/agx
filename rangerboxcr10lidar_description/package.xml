@@ -12,8 +12,8 @@ for rangerboxcr10lidar_description robot</p>
   <!-- ################################ -->
   <!-- XML: package renamed to rangerboxcr10lidar_description end -->
   <!-- ################################ -->
-  <author>TODO</author>
-  <maintainer email="TODO@email.com" />
+  <author>LiiiiPeggy</author>
+  <maintainer email="LiiiiPeggy@todo.com" />
   <license>BSD</license>
   <buildtool_depend>catkin</buildtool_depend>
   <depend>roslaunch</depend>
