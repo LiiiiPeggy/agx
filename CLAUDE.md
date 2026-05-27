@@ -11,6 +11,10 @@ This is a ROS 1 (catkin) workspace for a **Loco-Manipulation robot** platform co
 - RoboSense 16-line LiDAR + Intel RealSense depth camera
 - SLAM (GMapping) + Navigation (move_base/AMCL) + RViz multi-goal plugin
 
+The repo has two main work areas:
+1. **ROS workspace** (root): catkin packages for real hardware drivers, URDF, SLAM, navigation
+2. **MuJoCo simulation** (`mujoco_demo/`): standalone Python simulation replacing all real hardware (worktree branch `worktree-mujoco-demo`)
+
 ## Build Commands
 
 ```bash
@@ -126,3 +130,67 @@ All Dobot commands are exposed as ROS services under `/dobot_v4_bringup/srv/`. T
 - The `src/README.md` contains a comprehensive subproject guide (written in Chinese).
 - `librealsense-2.50.0.zip` in src/ is the LibRealSense SDK source needed by `realsense-ros`.
 - The `ranger_ros/sensor_msgs` package is a bundled local copy of the standard sensor_msgs (for version pinning).
+
+## MuJoCo Simulation (mujoco_demo/)
+
+A standalone Python simulation that replaces the entire ROS + hardware stack with MuJoCo. No ROS dependency.
+
+### Setup
+
+```bash
+conda create -n mujoco python=3.10 -y
+conda run -n mujoco pip install mujoco numpy scipy matplotlib opencv-python Pillow
+```
+
+### Run
+
+```bash
+cd .claude/worktrees/mujoco-demo
+python -m mujoco_demo.main [--task "pick up the red cup and place it on the shelf"]
+```
+
+### Tests
+
+```bash
+cd .claude/worktrees/mujoco-demo
+python -m pytest tests/ -v          # all tests
+python -m pytest tests/test_sim_engine.py -v  # single file
+```
+
+### Architecture
+
+```
+mujoco_demo/
+├── sim/          # MuJoCo engine (qpos/qvel control), scene generation, LiDAR (mj_ray) + RGBD (mjv_render)
+├── slam/         # 3D log-odds occupancy grid, 2D projection, scene graph
+├── nav/          # A* global planner, VFH+ local avoidance, waypoint path follower
+├── control/      # Whole-body kinematics (numerical Jacobian), QP-based IK, gripper control
+├── task/         # Regex-based natural language parser, 8-state FSM for pick-and-place
+├── perception/   # Color-based detection (HSV), optional Grounding-DINO
+├── viz/          # MuJoCo 3D viewer + Matplotlib 2×2 dashboard (SLAM map, task state, LiDAR, camera)
+└── main.py       # Main loop: mapping sweep → task execution → visualization
+```
+
+### Key Design Decisions
+
+- **Direct qpos/qvel control** instead of actuators (MuJoCo URDF doesn't support `<actuator>` tags)
+- **Differential drive** model for chassis (4 wheels, `set_base_velocity(v, omega)` writes qvel)
+- **Ray-cast LiDAR**: 16×360 = 5760 rays per frame via `mujoco.mj_ray()`
+- **Numerical Jacobian** via finite differences for whole-body IK (base 3-DOF + arm 6-DOF)
+- **Virtual grasp**: object locked to gripper position when distance < 0.15m (not physics-based)
+- **Mesh decimation**: STL meshes reduced from 636K to 150K faces to fit MuJoCo's 200K face limit
+- **Relative mesh paths**: `os.path.relpath()` for portability across machines
+
+### Simulation-to-Hardware Mapping
+
+| mujoco_demo | Real System |
+|---|---|
+| `engine.set_base_velocity()` | `/cmd_vel` → ranger_base_node → CAN bus |
+| `engine.set_arm_joints()` | Dobot TCP/IP → servoj() |
+| `engine.set_gripper()` | `/gripper/ctrl` → Modbus RTU |
+| `LiDARSensor.scan()` | rslidar_sdk → `/rslidar_points` |
+| `RGBDCamera.capture()` | realsense2_camera → `/camera/depth/*` |
+| `OccupancyGrid` | slam_gmapping |
+| `AStarPlanner` + `VFHPlanner` | move_base (DWA + global planner) |
+| `WholeBodyKinematics` | MoveIt |
+| `TaskStateMachine` | Custom behavior tree / script |
