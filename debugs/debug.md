@@ -333,30 +333,17 @@ sudo apt install ros-melodic-robot-localization
 
 ---
 
-## 附录：包名命名规范警告
+## 附录：包名命名规范警告（已处理）
 
-多个节点启动时出现以下警告：
+历史版本中包名 `RangerCR10LiDAR_description`、URDF 机器人名 `RangerCR10LiDAR` 含大写字母，会触发 rospack 命名规范警告。
 
-```
-WARNING: Package name "RangerCR10LiDAR_description" does not follow the naming conventions.
-It should start with a lower case letter and only contain lower case letters, digits, underscores, and dashes.
-```
+### 当前命名（已统一为小写）
 
-### 原因
+| 项 | 新名称 |
+|----|--------|
+| 目录 / ROS 包 | `rangerboxcr10lidar_description` |
+| 整机 URDF | `urdf/rangercr10lidar.urdf` |
+| `<robot name="...">` | `rangercr10lidar` |
+| 关节配置 | `config/joint_names_rangerboxcr10lidar_description.yaml` |
 
-ROS 包名规范要求全部小写。`RangerCR10LiDAR_description` 包含大写字母。
-
-### 解决方案（可选）
-
-如果需要消除警告，可以重命名包：
-
-```bash
-# 重命名目录
-mv RangerCR10LiDAR_description ranger_cr10_lidar_description
-
-# 修改 package.xml 中的 <name>
-# 修改 CMakeLists.txt 中的 project()
-# 修改所有引用该包名的 launch 文件和 URDF
-```
-
-此警告不影响功能，可暂时忽略。
+重新 `catkin_make` 并 `source devel/setup.bash` 后，上述警告应不再出现。

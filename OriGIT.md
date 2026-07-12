@@ -207,20 +207,20 @@ GitHub：本地内容未记录可确认的 GitHub 上游；两者不在 `origit/
 
 结论：这部分是为移动操作平台上的升降机构新增的完整 ROS 控制接口。
 
-## 11. RangerBoxCR10LiDAR_description
+## 11. rangerboxcr10lidar_description
 
 GitHub：本地内容未记录可确认的 GitHub 上游；该包不在 `origit/` 原始项目列表中，按当前工程新增整机描述包记录。
 
-该描述包不在 `origit/` 中，是当前工作空间新增的整机 URDF/mesh 集成包。
+该描述包不在 `origit/` 中，是当前工作空间新增的整机 URDF/mesh 集成包（ROS 包名与目录均为小写 `rangerboxcr10lidar_description`）。
 
 主要适配点：
 
-- 将 Ranger 底盘、CR10 机械臂、AG95 夹爪、RoboSense 雷达、RealSense D435 和上装箱体合并到同一个 `RangerCR10LiDAR.urdf`。
+- 将 Ranger 底盘、CR10 机械臂、AG95 夹爪、RoboSense 雷达、RealSense D435 和上装箱体合并到同一个 `urdf/rangercr10lidar.urdf`（`<robot name="rangercr10lidar">`）。
 - `cr10_mount_joint` 将 `cr10_base_link` 固定到底盘 `base_link`。
 - AG95 固定到 `cr10_Link6`，并保留多组 mimic joint，使单个 `gripper_finger1_joint` 能驱动夹爪连杆联动。
 - 雷达通过 `lidar_joint0` 固定在 `base_link` 上。
 - RealSense D435 通过 `d435_joint` 固定到 `lidar_link0` 上方，并展开了 D435 的 depth/infra/color optical frame。
-- `joint_names_RangerCR10LiDAR_description.yaml` 整合了底盘转向/轮子关节和 CR10 六轴关节。
+- `config/joint_names_rangerboxcr10lidar_description.yaml` 整合了底盘转向/轮子关节和 CR10 六轴关节。
 
 结论：这是为了仿真、可视化和整机 TF/URDF 对齐新增的设备描述包。
 
@@ -231,6 +231,6 @@ GitHub：本地内容未记录可确认的 GitHub 上游；该包不在 `origit/
 1. `ranger_ros/ranger_bringup`：把底盘、雷达、RF2O、GMapping、AMCL、move_base、地图和 RViz 串成实车导航栈。
 2. `rslidar_sdk`、`rf2o_laser_odometry`、`SLAM`：把 RS-Helios-16P 的点云变成 2D `/scan`，再生成 `/odom` 和地图/定位所需 TF。
 3. `plugin/rviz_navi_multi_goals_pub_plugin`：把原本的多目标导航面板扩展为建图、保存地图、选择地图、启动导航的一体化操作面板。
-4. 新增 `gripper`、`lifting_ctrl`、`bt_task_msgs`、`RangerBoxCR10LiDAR_description`：补齐 AG95 夹爪、升降机构、消息接口和整机 URDF。
+4. 新增 `gripper`、`lifting_ctrl`、`bt_task_msgs`、`rangerboxcr10lidar_description`：补齐 AG95 夹爪、升降机构、消息接口和整机 URDF。
 
 `TCP-IP-ROS-6AXis` 和 `ugv_sdk` 基本原样使用，更多依赖运行参数或上层 launch 完成接入；`realsense-ros` 只有编译依赖补充，没有明显的设备定制逻辑。
