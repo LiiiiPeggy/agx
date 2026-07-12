@@ -61,18 +61,6 @@ $ catkin_make
     $ roslaunch ranger_bringup ranger.launch #for ranger
     ```
 
-* Start the base node for ranger_mini_v1
-
-    ```shell
-    $ roslaunch ranger_bringup ranger_mini_v1.launch #for ranger_mini 1.0
-    ```
-
-* Start the base node for ranger_mini_v2
-
-    ```bash
-    $ roslaunch ranger_bringup ranger_mini_v2.launch #for ranger_mini 2.0
-    ```
-
 
 ## ROS interface
 

@@ -22,6 +22,46 @@ rosrun ranger_bringup bringup_can2usb.bash
 
 # 2. 启动 Ranger 底盘
 roslaunch ranger_bringup ranger.launch
+# 遥控器第二根杆需要在最上：指令控制模式
+
+# 启动
+rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/cmd_vel
+```
+使用按键 `i` 前进、`,` 后退、`j` 左转、`l` 右转、`k` 停止。
+**命令行直接发送（可用）**
+
+```bash
+# 前进（线速度 0.3 m/s）
+rostopic pub /cmd_vel geometry_msgs/Twist "linear:
+  x: 0.3
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0"
+
+# 左转（角速度 0.5 rad/s）
+rostopic pub /cmd_vel geometry_msgs/Twist "linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.5"
+
+# 停止
+rostopic pub /cmd_vel geometry_msgs/Twist "linear:
+  x: 0.0
+  y: 0.0
+  z: 0.0
+angular:
+  x: 0.0
+  y: 0.0
+  z: 0.0"
+```
+
 
 # 3. 启动 CR10 机械臂（新终端）
 export DOBOT_TYPE=cr10
@@ -177,6 +217,7 @@ dobot_v4_bringup
         | (TCP Socket)
         v
 Dobot 控制器 (192.168.5.1)
+Dobot 控制器 (192.168.8.188)
   端口 29999: Dashboard 命令（请求/响应，单客户端）
   端口 30004: 实时反馈（1440 字节二进制流，8ms 周期）
 ```
@@ -205,8 +246,9 @@ roslaunch dobot_moveit demo.launch                # MoveIt 仿真
 roslaunch dobot_gazebo gazebo.launch              # Gazebo 仿真
 
 # 真实 CR10 控制
+#  平板app里面需要设置模式“TCP/IP二次开发”
 export DOBOT_TYPE=cr10
-roslaunch dobot_v4_bringup bringup_v4.launch robotIp:=192.168.5.1
+roslaunch dobot_v4_bringup bringup_v4.launch robotIp:=192.168.8.188
 
 # MoveIt 运动规划（另一个终端）
 export DOBOT_TYPE=cr10
@@ -214,6 +256,30 @@ roslaunch dobot_moveit moveit.launch
 ```
 
 ### 关键服务（部分）
+**方式一：ROS Service 命令行**
+
+```bash
+# 使能机械臂（必须先执行）
+rosservice call /dobot_v4_bringup/srv/EnableRobot
+
+# 关节运动（移动到指定关节角度，单位：度）
+rosservice call /dobot_v4_bringup/srv/JointMovJ "{j1: 0, j2: 0, j3: 0, j4: 0, j5: 0, j6: 0}"
+
+# 笛卡尔运动（移动到指定位姿）
+rosservice call /dobot_v4_bringup/srv/MovJ "{x: 200, y: 0, z: 200, rx: 180, ry: 0, rz: 0}"
+
+# 直线运动
+rosservice call /dobot_v4_bringup/srv/MovL "{x: 200, y: 0, z: 300, rx: 180, ry: 0, rz: 0}"
+
+# 急停
+rosservice call /dobot_v4_bringup/srv/EmergencyStop
+
+# 清除错误
+rosservice call /dobot_v4_bringup/srv/ClearError
+
+# 下使能
+rosservice call /dobot_v4_bringup/srv/DisableRobot
+```
 
 - `EnableRobot` / `DisableRobot` -- 使能/禁用
 - `MovJ` / `MovL` / `JointMovJ` -- 关节/笛卡尔运动
@@ -276,7 +342,7 @@ pub.publish(msg)
 
 ---
 
-## 5. lifting_ctrl -- 电动升降柱控制
+## 5. lifting_ctrl -- 电动升降柱控制 (可用)
 
 **路径:** `lifting_ctrl/`
 **语言:** Python
@@ -452,6 +518,9 @@ roslaunch realsense2_camera rs_camera.launch filters:=pointcloud
 
 # 深度对齐到彩色
 roslaunch realsense2_camera rs_camera.launch align_depth:=true
+
+#rviz可视化彩色点云
+roslaunch realsense2_camera demo_pointcloud.launch 
 ```
 
 ### 依赖

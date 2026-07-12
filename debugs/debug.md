@@ -80,7 +80,7 @@ MoveIt 需要一个 `FollowJointTrajectory` action server 来执行轨迹，这�
 ```bash
 # 终端 1：先启动机械臂驱动（提供 action server）
 export DOBOT_TYPE=cr10
-roslaunch dobot_v4_bringup bringup_v4.launch robotIp:=192.168.5.1
+roslaunch dobot_v4_bringup bringup_v4.launch robotIp:=192.168.8.188
 
 # 终端 2：再启动 MoveIt（消费 action server）
 export DOBOT_TYPE=cr10
@@ -185,7 +185,7 @@ roslaunch ranger_bringup ranger.launch
 
 底盘节点订阅 `/cmd_vel` 话题（`geometry_msgs/Twist` 类型）。发送速度命令即可控制移动。
 
-**方式一：命令行直接发送**
+**方式一：命令行直接发送（可用）**
 
 ```bash
 # 前进（线速度 0.3 m/s）
@@ -219,7 +219,8 @@ angular:
   z: 0.0"
 ```
 
-**方式二：键盘遥控（推荐）**
+**方式二：键盘遥控（可行）**
+**遥控器第二根杆需要在最上：指令控制模式**
 
 ```bash
 # 安装（如果未安装）
